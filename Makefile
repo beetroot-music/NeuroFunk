@@ -1,4 +1,5 @@
 
+.PHONY: neuro
 neuro:
 	go build -o neuro
 
