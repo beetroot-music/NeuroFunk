@@ -1,4 +1,4 @@
-module github.com/beetroot-music/NeuroFunk
+module github.com/beetroot-music/neuro
 
 go 1.20
 
