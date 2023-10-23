@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -52,8 +52,8 @@ func createSession() error {
 	}
 
 	var responseBody struct {
-		ClientURL    string
-		SessionToken string
+		ClientURL string
+		Token     string
 	}
 
 	jsonData, err := json.Marshal(&requestBody)
@@ -61,16 +61,16 @@ func createSession() error {
 		return err
 	}
 
-	resp, err := http.Post(fmt.Sprintf("%s/player/register", opts.Relay), "application/json", bytes.NewReader(jsonData))
+	resp, err := http.Post(fmt.Sprintf("%s/player/session", opts.Relay), "application/json", bytes.NewReader(jsonData))
 	if err != nil {
 		return err
 	}
 
 	if resp.StatusCode != 201 {
-		return fmt.Errorf("Server responded with '%s'", resp.Status)
+		return fmt.Errorf("server responded with '%s'", resp.Status)
 	}
 
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
 	resp.Body.Close()
 	if err != nil {
 		return err
@@ -81,7 +81,7 @@ func createSession() error {
 		return err
 	}
 
-	fmt.Printf("Got session token: %s\n", responseBody.SessionToken)
+	fmt.Printf("Got session token: %s\n", responseBody.Token)
 	fmt.Printf("Got client URL:    %s\n", responseBody.ClientURL)
 
 	return nil
